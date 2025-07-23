@@ -7,7 +7,9 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
@@ -25,17 +27,29 @@ public class Car {
    private int ano;
    private boolean disponivel = true;
 
+   @Positive
+   private BigDecimal precoDiaria;
+
    //Construtor
     public Car(){
 
     }
 
-    public Car(String modelo, String marca, String placa, int ano, boolean disponivel) {
+    public Car(String modelo, String marca, String placa, int ano, boolean disponivel, BigDecimal precoDiaria) {
         this.modelo = modelo;
         this.marca = marca;
         this.placa = placa;
         this.ano = ano;
         this.disponivel = disponivel;
+        this.precoDiaria = precoDiaria;
+    }
+
+    public BigDecimal getPrecoDiaria() {
+        return precoDiaria;
+    }
+
+    public void setPrecoDiaria(BigDecimal precoDiaria) {
+        this.precoDiaria = precoDiaria;
     }
 
     public String getModelo() {
@@ -87,6 +101,7 @@ public class Car {
                 ", placa='" + placa + '\'' +
                 ", ano=" + ano +
                 ", disponivel=" + disponivel +
+                ", precoDiaria=" + precoDiaria +
                 '}';
     }
 
