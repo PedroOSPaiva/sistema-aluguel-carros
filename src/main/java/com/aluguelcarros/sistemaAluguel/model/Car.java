@@ -1,15 +1,14 @@
 package com.aluguelcarros.sistemaAluguel.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -117,4 +116,8 @@ public class Car {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    @OneToMany(mappedBy = "car")
+    @JsonIgnore
+    private List<Rental> rentals; // um carro pode ter vários aluguéis
 }
