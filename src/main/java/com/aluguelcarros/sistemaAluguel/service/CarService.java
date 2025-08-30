@@ -1,5 +1,6 @@
 package com.aluguelcarros.sistemaAluguel.service;
 
+import com.aluguelcarros.sistemaAluguel.dto.CarProjection;
 import com.aluguelcarros.sistemaAluguel.model.Car;
 import com.aluguelcarros.sistemaAluguel.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,10 @@ public class CarService {
         return carRepository.findByDisponivelTrue();
     }
 
+    public List<CarProjection> findAvailableProjected() {
+        return carRepository.findAllByDisponivelTrue();
+    }
+
     public Car save(Car car) {
         return carRepository.save(car);
     }
@@ -32,6 +37,7 @@ public class CarService {
         car.setPlaca(updatedCar.getPlaca());
         car.setAno(updatedCar.getAno());
         car.setDisponivel(updatedCar.isDisponivel());
+        car.setPrecoDiaria(updatedCar.getPrecoDiaria());
         return carRepository.save(car);
     }
 

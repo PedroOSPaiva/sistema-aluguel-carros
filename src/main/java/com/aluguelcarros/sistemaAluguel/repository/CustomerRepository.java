@@ -1,5 +1,6 @@
 package com.aluguelcarros.sistemaAluguel.repository;
 
+import com.aluguelcarros.sistemaAluguel.dto.CustomerProjection;
 import com.aluguelcarros.sistemaAluguel.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -26,4 +27,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     // Buscar clientes por faixa de idade (usando birthDate)
     List<Customer> findByBirthDateBetween(LocalDate startDate, LocalDate endDate);
+
+    // Projection: retornar apenas campos básicos
+    List<CustomerProjection> findAllProjectedBy();
 }

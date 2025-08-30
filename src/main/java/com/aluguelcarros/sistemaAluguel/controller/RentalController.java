@@ -1,5 +1,6 @@
 package com.aluguelcarros.sistemaAluguel.controller;
 
+import com.aluguelcarros.sistemaAluguel.dto.RentalProjection;
 import com.aluguelcarros.sistemaAluguel.model.Rental;
 import com.aluguelcarros.sistemaAluguel.service.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,23 @@ public class RentalController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
-        Rental rental = rentalService.createRental(customerId, carId, startDate, endDate);
-        return ResponseEntity.ok(rental);
+        try {
+            Rental rental = rentalService.createRental(customerId, carId, startDate, endDate);
+            return ResponseEntity.ok(rental);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     // PUT /api/rentals/{id}/finish
     @PutMapping("/{id}/finish")
     public ResponseEntity<Rental> finishRental(@PathVariable Long id) {
-        Rental rental = rentalService.finishRental(id);
-        return ResponseEntity.ok(rental);
+        try {
+            Rental rental = rentalService.finishRental(id);
+            return ResponseEntity.ok(rental);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     // GET /api/rentals
@@ -45,6 +54,23 @@ public class RentalController {
     // GET /api/rentals/{id}
     @GetMapping("/{id}")
     public ResponseEntity<Rental> getRentalById(@PathVariable Long id) {
-        return ResponseEntity.ok(rentalService.findRentalById(id));
+        try {
+            Rental rental = rentalService.findRentalById(id);
+            return ResponseEntity.ok(rental);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // NOVO: GET /api/rentals/projection
+    @GetMapping("/projection")
+    public ResponseEntity<List<RentalProjection>> getAllRentalsProjected() {
+        return ResponseEntity.ok(rentalService.findAllRentalsProjected());
+    }
+
+    // NOVO: GET /api/rentals/active
+    @GetMapping("/active")
+    public ResponseEntity<List<RentalProjection>> getActiveRentals() {
+        return ResponseEntity.ok(rentalService.findActiveRentalsProjected()); //TODO veja isso aqui qual statos eu tenho que ver, os ativos.
     }
 }

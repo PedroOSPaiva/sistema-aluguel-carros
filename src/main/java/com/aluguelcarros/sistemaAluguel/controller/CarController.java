@@ -1,5 +1,6 @@
 package com.aluguelcarros.sistemaAluguel.controller;
 
+import com.aluguelcarros.sistemaAluguel.dto.CarProjection;
 import com.aluguelcarros.sistemaAluguel.model.Car;
 import com.aluguelcarros.sistemaAluguel.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class CarController {
 
     // GET /api/cars/available
     @GetMapping("/available")
-    public ResponseEntity<List<Car>> getAvailableCars() {
-        return ResponseEntity.ok(carService.findAvailable());
+    public ResponseEntity<List<CarProjection>> getAvailableCars() {
+        return ResponseEntity.ok(carService.findAvailableProjected());
     }
 
     // POST /api/cars
