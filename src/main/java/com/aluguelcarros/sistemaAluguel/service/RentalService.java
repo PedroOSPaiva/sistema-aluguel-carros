@@ -1,5 +1,6 @@
 package com.aluguelcarros.sistemaAluguel.service;
 
+import com.aluguelcarros.sistemaAluguel.dto.RentalProjection;
 import com.aluguelcarros.sistemaAluguel.exception.ResourceNotFoundException;
 import com.aluguelcarros.sistemaAluguel.model.Car;
 import com.aluguelcarros.sistemaAluguel.model.Customer;
@@ -41,7 +42,7 @@ public class RentalService {
             throw new IllegalArgumentException("A data de término deve ser posterior à data de início.");
         }
 
-        BigDecimal precoDiaria = car.getPrecoDiaria(); // Este campo precisa existir na entidade Car
+        BigDecimal precoDiaria = car.getPrecoDiaria();
         BigDecimal total = precoDiaria.multiply(BigDecimal.valueOf(dias));
 
         Rental rental = new Rental(startDate, endDate, total, car, customer, RentalStatus.ACTIVE);
@@ -77,4 +78,13 @@ public class RentalService {
                 .orElseThrow(() -> new ResourceNotFoundException("Aluguel não encontrado"));
     }
 
+    // NOVO: Método para buscar projections
+    public List<RentalProjection> findAllRentalsProjected() {
+        return rentalRepository.findAllProjected();
+    }
+
+    // NOVO: Método para buscar aluguéis ativos com projection
+    public List<RentalProjection> findActiveRentalsProjected() {
+        return rentalRepository.findActiveRentalsProjected();
+    }
 }

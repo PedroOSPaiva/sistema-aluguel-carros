@@ -1,5 +1,6 @@
 package com.aluguelcarros.sistemaAluguel.controller;
 
+import com.aluguelcarros.sistemaAluguel.dto.CustomerProjection;
 import com.aluguelcarros.sistemaAluguel.dto.CustomerRequestDTO;
 import com.aluguelcarros.sistemaAluguel.dto.CustomerResponseDTO;
 import com.aluguelcarros.sistemaAluguel.mapper.CustomerMapper;
@@ -25,8 +26,8 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<List<CustomerResponseDTO>> getAllCustomers() {
-        List<Customer> customers = customerService.findAll();
-        List<CustomerResponseDTO> dtos = customers.stream()
+        List<CustomerResponseDTO> dtos = customerService.findAll()
+                .stream()
                 .map(customerMapper::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
@@ -44,16 +45,14 @@ public class CustomerController {
     public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CustomerRequestDTO dto) {
         Customer customer = customerMapper.toEntity(dto);
         Customer saved = customerService.create(customer);
-        CustomerResponseDTO responseDTO = customerMapper.toDTO(saved);
-        return ResponseEntity.ok(responseDTO);
+        return ResponseEntity.ok(customerMapper.toDTO(saved));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerRequestDTO dto) {
         try {
             Customer updated = customerService.update(id, dto);
-            CustomerResponseDTO responseDTO = customerMapper.toDTO(updated);
-            return ResponseEntity.ok(responseDTO);
+            return ResponseEntity.ok(customerMapper.toDTO(updated));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
@@ -67,8 +66,8 @@ public class CustomerController {
 
     @GetMapping("/search")
     public ResponseEntity<List<CustomerResponseDTO>> searchByName(@RequestParam String name) {
-        List<Customer> customers = customerService.findByName(name);
-        List<CustomerResponseDTO> dtos = customers.stream()
+        List<CustomerResponseDTO> dtos = customerService.findByName(name)
+                .stream()
                 .map(customerMapper::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
@@ -80,5 +79,10 @@ public class CustomerController {
                 .map(customerMapper::toDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/projection")
+    public ResponseEntity<List<CustomerProjection>> getAllCustomersProjection() {
+        return ResponseEntity.ok(customerService.findAllProjected());
     }
 }

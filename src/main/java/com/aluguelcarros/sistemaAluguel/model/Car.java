@@ -14,25 +14,33 @@ import java.util.Objects;
 @Entity
 public class Car {
 
-   @Id @GeneratedValue
-   private Long id;
-   @NotBlank
-   private String modelo;
-   @NotBlank
-   private String marca;
-   @NotBlank @Column(unique = true)
-   private String placa;
-   @Min(1900)@Max(2100)
-   private int ano;
-   private boolean disponivel = true;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-   @Positive
-   private BigDecimal precoDiaria;
+    @NotBlank
+    private String modelo;
 
-   //Construtor
-    public Car(){
+    @NotBlank
+    private String marca;
 
-    }
+    @NotBlank @Column(unique = true)
+    private String placa;
+
+    @Min(1900) @Max(2100)
+    private int ano;
+
+    private boolean disponivel = true;
+
+    @Positive
+    private BigDecimal precoDiaria;
+
+    // RELACIONAMENTO MOVIDO PARA DENTRO DA CLASSE
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Rental> rentals; // um carro pode ter vários aluguéis
+
+    // Construtores
+    public Car() {}
 
     public Car(String modelo, String marca, String placa, int ano, boolean disponivel, BigDecimal precoDiaria) {
         this.modelo = modelo;
@@ -43,12 +51,13 @@ public class Car {
         this.precoDiaria = precoDiaria;
     }
 
-    public BigDecimal getPrecoDiaria() {
-        return precoDiaria;
+    // GETTER PARA ID ADICIONADO
+    public Long getId() {
+        return id;
     }
 
-    public void setPrecoDiaria(BigDecimal precoDiaria) {
-        this.precoDiaria = precoDiaria;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getModelo() {
@@ -87,8 +96,29 @@ public class Car {
         return disponivel;
     }
 
+    // GETTER ADICIONAL PARA PROJECTION
+    public boolean getDisponivel() {
+        return disponivel;
+    }
+
     public void setDisponivel(boolean disponivel) {
         this.disponivel = disponivel;
+    }
+
+    public BigDecimal getPrecoDiaria() {
+        return precoDiaria;
+    }
+
+    public void setPrecoDiaria(BigDecimal precoDiaria) {
+        this.precoDiaria = precoDiaria;
+    }
+
+    public List<Rental> getRentals() {
+        return rentals;
+    }
+
+    public void setRentals(List<Rental> rentals) {
+        this.rentals = rentals;
     }
 
     @Override
@@ -116,8 +146,4 @@ public class Car {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    @OneToMany(mappedBy = "car")
-    @JsonIgnore
-    private List<Rental> rentals; // um carro pode ter vários aluguéis
 }
